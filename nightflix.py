@@ -79,14 +79,33 @@ def mostrar_series(tree, categoria_id=None):
 
 #janela 2
 def nova_janela():
+    #janela
+    janela.iconify()
     nova_janela = tk.Toplevel(janela)
     nova_janela.resizable(0, 0)
     nova_janela.configure(bg="#212121")
-    nova_janela.geometry("680x380")
+    nova_janela.geometry("880x580")
     nova_janela.iconbitmap("icon.ico")
     nova_janela.title("Sistema de Escolha")
 
-    # Crie uma tabela para exibir os dados
+    def cadastrar():
+        filme = filme_entry.get()
+        categoria = categoria_entry.get()
+
+        conn = sqlite3.connect('nf.db')
+        cc = conn.cursor()
+
+        cc.execute("INSERT INTO filmes (titulo, ano_lancamento, duracao_minutos, categoria_id, diretor_id, avaliacao_id, ator_id, producao_id) VALUES (?, 2020, 120, ?, 2, 5, 3, 6)", (filme, categoria))
+
+        #fechar
+        conn.commit()
+        conn.close()
+
+        filme_entry.delete(0, tk.END)
+        categoria_entry.delete(0, tk.END)
+
+
+    #Tabela para exibir os dados
     tree = ttk.Treeview(nova_janela, columns=("ID", "Título"), show="headings")
     tree.heading("ID", text="ID")
     tree.heading("Título", text="Título")
@@ -98,12 +117,30 @@ def nova_janela():
 
     #Botão "Filmes"
     filmes_button = tk.Button(nova_janela, text="Filmes", command=lambda: mostrar_filmes(tree), bg="#be2929", font=fonte, borderwidth=2)
-    filmes_button.place(x=570, y=25)
+    filmes_button.place(x=770, y=25)
 
 
     #Botão "Séries"
     series_button = tk.Button(nova_janela, text="Séries", command=lambda: mostrar_series(tree), bg="#be2929", font=fonte, borderwidth=2)
     series_button.place(x=50, y=25)
+
+    #Botão Cadastrar filme
+    label_filme = tk.Label(nova_janela, text="Titulo do Filme:")
+    label_filme.pack()
+    filme_entry = tk.Entry(nova_janela)
+    filme_entry.pack()
+
+    #Botão Cadastrar Categoria
+    label_cat = tk.Label(nova_janela, text="Categoria")
+    label_cat.pack()
+    label_catg = tk.Label(nova_janela, text="[1]Comédia [2]Ação [3]Drama [4]Ficção Científica [5]Terror [6]Documentário [7]Desenho Animado")
+    label_catg.pack()
+    categoria_entry = tk.Entry(nova_janela)
+    categoria_entry.pack()
+
+    #CADASTRAR BOTAO
+    cad_filme = tk.Button(nova_janela, text="Cadastrar", command=cadastrar)
+    cad_filme.pack()
 
 
     #Botões de filtro por categoria
@@ -131,11 +168,10 @@ login_button = ctk.CTkButton(master=Login_frame, text='ENTRAR', width =300, comm
 
 
 
-
-
 #botão para cadastrar
 def tela_register():
-    Login_frame.pack_forget()
+
+    Login_frame.pack_forget() 
 
     rg_frame = ctk.CTkFrame(master=janela, width= 350, height= 396)
     rg_frame.pack(side= RIGHT)
@@ -166,9 +202,22 @@ def tela_register():
     back_button = ctk.CTkButton(master=rg_frame, text='VOLTAR', width =145, fg_color="red", command= back).place(x=25, y=300)
 
     def save_user():
+        
+        #cadastra usuarios no banco dados
+        email = email_login.get()
+        senha = password_login.get()
+        
+        cc.execute("INSERT INTO usuario (email, senha) VALUES (?, ?)", (email, senha))
+
+        conn.commit()
+        cc.close()
+
+        email_login.delete(0, tk.END)
+        password_login.delete(0, tk.END)
         msg = messagebox.showinfo(title= "Estado do cadastro", message = "Parbéns Usuario criado com sucesso")
         pass
-    save_button = ctk.CTkButton(master=rg_frame, text='Criar Conta', width =145, fg_color="green").place(x=180, y=300)
+    save_button = ctk.CTkButton(master=rg_frame, text='Criar Conta', width =145, fg_color="green", command= save_user).place(x=180, y=300)
+
 
 
     
