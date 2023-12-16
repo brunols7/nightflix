@@ -19,7 +19,7 @@ Streaming Service Project - Final Activity Senac
 
 ---
 
-### :hammer_and_wrench: Languages and Tools Used:
+### 🛠 Languages and Tools Used:
 
 
 <div>
